@@ -1,0 +1,23 @@
+doctype html
+html
+  head(prefix='og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#')
+    meta(charset='utf-8')
+    meta(content='yes' name='apple-mobile-web-app-capable')
+    meta(content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport')
+    meta(content='website' property='og:type')
+    meta(content='AEN Testnet Faucet' property='og:title')
+    meta(content='AEN Testnet Faucet' property='og:site_name')
+    meta(content='AEN Testnet Faucet - You can get AEN for development / testing.' property='og:description')
+    meta(content='AEN Testnet Faucet - You can get AEN for development / testing.' name='description')
+    title AEN Faucet
+    link(rel='stylesheet', href='/node_modules/@outboxcraft/beauter/beauter.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='shortcut icon' href='/favicon.ico' type='image/x-icon')
+    link(rel='apple-touch-icon' href='/images/apple-icon.png' sizes='180x180' type='image/x-icon')
+    link(rel='icon' href='/images/favicon-32x32.png' sizes='32x32' type='image/png')
+    link(rel='icon' href='/images/favicon-16x16.png' sizes='16x16' type='image/png')
+    link(rel='icon' href='/images/android-icon-192x192.png' sizes='192x192' type='image/png')
+  body
+    include _nav
+    block content
+    include _footer

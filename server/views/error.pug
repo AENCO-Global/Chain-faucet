@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  .container
+    .row
+      .col.m12
+        .alert._danger
+          if errorBody
+            span= `${errorBody.code}: ${errorBody.message}`
+          else
+            span= message
+    .row
+      .col
+        div
+          h3 Something went wrong.
+          img(src="/images/computer_error_bluescreen.png")
+          p Try that again, and if it still doesn't work, please inform the administrator.
+          //- p
+          //-   a(href="https://twitter.com/44uk_i3", target="_blank") @44uk_i3
