@@ -1,7 +1,7 @@
 const config = require('config')
 const express = require('express')
 const router = express.Router()
-const aen = require('aen-sdk')
+const aen = require('chain-js-sdk')
 const op = require('rxjs/operators')
 
 const MAX_AEN = parseInt(process.env.MAX_AEN || config.aen.max)
@@ -42,6 +42,7 @@ router.get('/', function(req, res, next) {
     )
     .subscribe({
       next(data) {
+        console.log(data)
         res.render('index', {
           drained: drained,
           txHash: req.flash('txHash'),

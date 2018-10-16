@@ -1,1 +1,9 @@
 .idea
+public/stylesheets/*.css
+/node_modules
+npm-debug.log
+.DS_Store
+/*.env
+/.idea
+/.vscode
+/.env.development

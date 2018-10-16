@@ -3,7 +3,7 @@ const express = require('express')
 const router = express.Router()
 
 const request = require('request')
-const aen = require('aen-sdk')
+const aen = require('chain-js-sdk')
 const rx = require('rxjs')
 const op = require('rxjs/operators')
 const qs = require('querystring')
