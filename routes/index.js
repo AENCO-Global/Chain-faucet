@@ -34,7 +34,7 @@ router.get('/', function(req, res, next) {
         return mosaicService.mosaicsAmountViewFromAddress(faucetAccount.address)
           .pipe(
             op.mergeMap(_ => _),
-            op.filter(mosaic => mosaic.fullName() === 'aen:aen'),
+            op.filter(mosaic => mosaic.fullName() === 'nem:xem'),
             op.toArray(),
             op.map(mosaics => { return {mosaics, account} })
           )
