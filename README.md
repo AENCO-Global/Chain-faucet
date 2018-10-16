@@ -20,7 +20,7 @@ This is a NodeJS 8+ which is configured through either user environment variable
 * `ENOUGH_BALANCE` - If wallet requesting XEM has a balance greater than this value, don't allow any more to be claimed
 * `MAX_UNCONFIRMED` - If the Faucet is waiting for this value of transactions to be complete, temporarily halt service
 * `WAIT_HEIGHT` - If Faucet is this value blocks behind the network, temporarily halt service
-* `RECAPTCHA_CLIENT_SECRET`` - If wanting to integrate Google recaptcha challenge, client side secret to send to Google
+* `RECAPTCHA_CLIENT_SECRET` - If wanting to integrate Google recaptcha challenge, client side secret to send to Google
 * `RECAPTCHA_SERVER_SECRET` - If wanting to integrate Google recaptcha challenge, business side secret to send to Google
 
 ## Usage
