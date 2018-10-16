@@ -1,0 +1,9 @@
+{
+  "apps" : [{
+    "name"        : "AEN Faucet",
+    "script"      : "./bin/www",
+    "watch"       : true,
+    "wait_ready"  : true    
+  }
+  ]
+}
