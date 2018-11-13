@@ -65,12 +65,12 @@ router.post('/', async (req, res, next) => {
       mosaicService.mosaicsAmountViewFromAddress(faucetAccount.address)
         .pipe(
           op.mergeMap(_ => _),
-          op.filter(mo => mo.fullName() === 'aen:aen')
+          op.filter(mo => mo.fullName() === 'nem:xem')
         ),
       mosaicService.mosaicsAmountViewFromAddress(sanitizedAddress)
         .pipe(
           op.mergeMap(_ => _),
-          op.filter(mo => mo.fullName() === 'aen:aen'),
+          op.filter(mo => mo.fullName() === 'nem:xem'),
           op.defaultIfEmpty(),
           op.catchError(err => {
             const response = JSON.parse(err.response.text);
@@ -148,7 +148,7 @@ router.post('/', async (req, res, next) => {
         const transferTx = aen.TransferTransaction.create(
           aen.Deadline.create(),
           aen.Address.createFromRawAddress(address),
-          [new aen.Mosaic(new aen.MosaicId('aen:aen'), aen.UInt64.fromUint(txAmount))],
+          [new aen.Mosaic(new aen.MosaicId('nem:xem'), aen.UInt64.fromUint(txAmount))],
           msg,
           aen.NetworkType[process.env.NETWORK]
         )

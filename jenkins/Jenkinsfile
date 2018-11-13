@@ -1,0 +1,86 @@
+// string(name: 'COOKIE_SECRET', defaultValue: 'aenchain', description: 'A unique salt which would be used to encode client side storage. Currently unused')
+// string(name: 'MIN_XEM', defaultValue: '
+// string(name: 'MAX_XEM', defaultValue: '
+// string(name: 'OPT_XEM', defaultValue: '
+// string(name: 'ENOUGH_BALANCE', defaultValue: '
+// string(name: 'MAX_UNCONFIRMED', defaultValue: '
+// string(name: 'WAIT_HEIGHT=', defaultValue: '
+pipeline {
+    agent any
+    parameters {
+        string(name: 'TARGET_DEVICE', defaultValue: 'arch-vm', description: 'Where should the built wallet be pushed to?')
+        string(name: 'TARGET_PATH', defaultValue: '/home/butler/faucet', description: 'Where (on the device file system) should the build be pushed to?')
+        string(name: 'BASE_URL', defaultValue: 'http://arch-vm', description: 'The base URL the project is expecting')
+        string(name: 'PORT', defaultValue: '3000', description: 'The port to expose web service on')
+        string(name: 'NETWORK', defaultValue: 'public-test', description: 'Network Identifier according to the underlying SDK')
+        string(name: 'API_HOST', defaultValue: 'http://api-1.aencoin.io', description: 'REST Gateway address Faucet will communicate with'
+        string(name: 'PRIVATE_KEY', defaultValue: 'D2B22BA41E8D9881F45E650106F5DBB50F6711CA421743EEF005F5E22AA02D09', description: 'Private key of a supply account to be used as faucet')
+        string(name: 'RECAPTCHA_CLIENT_SECRET', defaultValue: 'NA', description: 'Google ReCaptcha Client side key')
+        string(name: 'RECAPTCHA_SERVER_SECRET', defaultValue: 'NA', description: 'Google ReCaptcha Server Side key')
+    }
+
+    stages {
+
+        stage('Checkout Repositories') {
+            steps {
+                dir('faucet') {
+                  git credentialsId: '6e8fe423-1a29-43f4-a5b1-13b307c4c679', url: 'git@github.com:AENCO-Global/Chain-faucet.git'
+                }
+            }
+        }
+
+        stage('Project Install') {
+						steps {
+						    dir('faucet/server') {
+                    // TODO Remove the install of cross-env once going beyond standard node image
+                    sh 'ls -la && npm i'
+                }
+            }
+        }
+
+        stage('Run tests') {
+            steps {
+                dir('faucet/server') {
+                    sh 'echo "Run tests here if any..."'
+                    // sh 'npm run test'
+                }
+            }
+        }
+
+        stage('Build Distribution') {
+						steps {
+                dir('faucet/server') {
+                    
+                    script {
+
+                        // Define environment content to go in file
+                        def envContent = "PORT=${params.PORT}\r\n"
+                        envContent = envContent + "NETWORK=${params.NETWORK}\r\n"
+                        envContent = envContent + "API_HOST=${params.API_HOST}\r\n"
+                        envContent = envContent + "PRIVATE_KEY=${params.PRIVATE_KEY}\r\n"
+                        envContent = envContent + "RECAPTCHA_CLIENT_SECRET=${params.RECAPTCHA_CLIENT_SECRET}\r\n"
+                        envContent = envContent + "RECAPTCHA_SERVER_SECRET=${params.RECAPTCHA_SERVER_SECRET}"
+                        envContent = envContent + "BUILD_NUMBER=${env.BUILD_NUMBER}"
+
+                        writeFile file: '.env', text: envContent
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Server') {
+            steps {
+                dir('faucet') {
+										sh 'ls -la server'
+										// TODO If using Jenkins (rather than local keyring), change following lines
+										withCredentials([sshUserPrivateKey(credentialsId: 'virtualbox', keyFileVariable: 'keyFile', passphraseVariable: 'passphrase', usernameVariable: 'username')]) {
+                                            sh "echo scp -r -i ${keyFile} dist ${username}@${params.TARGET_DEVICE}:${params.TARGET_PATH}"
+                                            sh "scp -r -i ${keyFile} dist ${username}@${params.TARGET_DEVICE}:${params.TARGET_PATH}"
+                                        }
+										// sh "scp -r server ${params.TARGET_DEVICE}:${params.TARGET_PATH}"
+
+                }
+           }
+        }
+    }
+}
