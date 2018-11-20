@@ -79,7 +79,7 @@ pipeline {
 
     }
     // With the project in place, restart the node process with updated code
-    sh "ssh ${params.TARGET_DEVICE} cd ${params.TARGET_PATH} && pm2 reload"
+    sh "ssh ${params.TARGET_DEVICE} cd ${params.TARGET_PATH} && pm2 start pm2.json"
    }
   }
  }
