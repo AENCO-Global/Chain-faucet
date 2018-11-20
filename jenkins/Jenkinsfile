@@ -8,7 +8,7 @@ pipeline {
 	string(name: 'PORT', defaultValue: '8000', description: 'The port to expose web service on')
   string(name: 'NETWORK', defaultValue: 'public-test', description: 'Network Identifier according to the underlying SDK')
   string(name: 'API_HOST', defaultValue: 'http://api-1.aencoin.io', description: 'REST Gateway address Faucet will communicate with')
-	string(name: 'PRIVATE_KEY', defaultValue: 'D2B22BA41E8D9881F45E650106F5DBB50F6711CA421743EEF005F5E22AA02D09', description: 'Private key of a supply account to be used as faucet')
+	string(name: 'PRIVATE_KEY', defaultValue: '27E8CD690E079F5C73E5A3B42C13583DB7FD55E49ECC240C2DD6167C1864E44C', description: 'Private key of a supply account to be used as faucet')
 	string(name: 'MIN_XEM', defaultValue: '1000000000', description: 'The minimum amount that may be paid out in any single transaction')
 	string(name: 'MAX_XEM', defaultValue: '2000000000', description: 'The minimum amount that may be paid out in any single transaction')
 	string(name: 'OPT_XEM', defaultValue: '', description: 'Default value used if user requesting a fixed amount of XEM')
@@ -88,7 +88,7 @@ stages {
 
     }
     // With the project in place, restart the node process with updated code
-    sh "ssh ${params.TARGET_DEVICE} ${params.TARGET_PATH}/node_modules/pm2/bin/pm2 start ${params.TARGET_PATH}/pm2.json"
+    sh "ssh ${params.TARGET_DEVICE} ${params.TARGET_PATH}/node_modules/pm2/bin/pm2 startOrReload ${params.TARGET_PATH}/pm2.json"
    }
   }
  }
