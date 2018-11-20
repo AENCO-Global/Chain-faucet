@@ -15,8 +15,8 @@ pipeline {
 	string(name: 'ENOUGH_BALANCE', defaultValue: '20000000000', description: 'If wallet requesting XEM has a balance greater than this value, don\'t allow any more to be claimed')
 	string(name: 'MAX_UNCONFIRMED', defaultValue: '5', description: 'If the Faucet is waiting for this value of transactions to be complete, temporarily halt service')
 	string(name: 'WAIT_HEIGHT', defaultValue: '0', description: 'If Faucet is this value blocks behind the network, temporarily halt service')
-  string(name: 'RECAPTCHA_CLIENT_SECRET', defaultValue: 'NA', description: 'Google ReCaptcha Client side key')
-  string(name: 'RECAPTCHA_SERVER_SECRET', defaultValue: 'NA', description: 'Google ReCaptcha Server Side key')
+  string(name: 'RECAPTCHA_CLIENT_SECRET', defaultValue: '', description: 'Google ReCaptcha Client side key')
+  string(name: 'RECAPTCHA_SERVER_SECRET', defaultValue: '', description: 'Google ReCaptcha Server Side key')
  }
 
 stages {
@@ -83,7 +83,7 @@ stages {
      //   sh "echo scp -r -i ${keyFile} dist ${username}@${params.TARGET_DEVICE}:${params.TARGET_PATH}"
      //   sh "scp -r -i ${keyFile} dist ${username}@${params.TARGET_DEVICE}:${params.TARGET_PATH}"
      //  }
-     sh "scp -r server ${params.TARGET_DEVICE}:${params.TARGET_PATH}"
+     sh "scp -r server/* ${params.TARGET_DEVICE}:${params.TARGET_PATH}"
 
     }
     // With the project in place, restart the node process with updated code
