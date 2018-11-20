@@ -84,6 +84,7 @@ stages {
      //   sh "scp -r -i ${keyFile} dist ${username}@${params.TARGET_DEVICE}:${params.TARGET_PATH}"
      //  }
      sh "scp -r server/* ${params.TARGET_DEVICE}:${params.TARGET_PATH}"
+		 sh "scp -r server/.env ${params.TARGET_DEVICE}:${params.TARGET_PATH}/.env"
 
     }
     // With the project in place, restart the node process with updated code
