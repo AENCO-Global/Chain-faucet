@@ -1,5 +1,5 @@
 .idea
-/serverpublic/stylesheets/*.css
+/server/public/stylesheets/*.css
 /server/node_modules
 /servernpm-debug.log
 .DS_Store

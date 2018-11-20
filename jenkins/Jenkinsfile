@@ -32,7 +32,6 @@ pipeline {
   stage('Project Install') {
    steps {
     dir('faucet/server') {
-     // TODO Remove the install of cross-env once going beyond standard node image
      sh 'ls -la && npm i'
     }
    }
@@ -52,7 +51,6 @@ pipeline {
     dir('faucet/server') {
 
      script {
-
       // Define environment content to go in file
       def envContent = "PORT=${params.PORT}\r\n"
       envContent = envContent + "NETWORK=${params.NETWORK}\r\n"
@@ -61,7 +59,6 @@ pipeline {
       envContent = envContent + "RECAPTCHA_CLIENT_SECRET=${params.RECAPTCHA_CLIENT_SECRET}\r\n"
       envContent = envContent + "RECAPTCHA_SERVER_SECRET=${params.RECAPTCHA_SERVER_SECRET}\r\n"
       envContent = envContent + "BUILD_NUMBER=${env.BUILD_NUMBER}"
-
       writeFile file: '.env', text: envContent
       sh "cat .env"
      }
@@ -82,8 +79,8 @@ pipeline {
 
     }
     // With the project in place, restart the node process with updated code
-    sh "ssh ${params.TARGET_DEVICE} cd ${params.TARGET_PATH} && npm run"
-   }   
+    sh "ssh ${params.TARGET_DEVICE} cd ${params.TARGET_PATH} && pm2 reload"
+   }
   }
  }
 }
