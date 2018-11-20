@@ -3,9 +3,7 @@ pipeline {
  parameters {
   string(name: 'TARGET_DEVICE', defaultValue: 'mistress.aencoin.com', description: 'Where should the built wallet be pushed to?')
   string(name: 'TARGET_PATH', defaultValue: '/var/www/faucet', description: 'Where (on the device file system) should the build be pushed to?')
-	string(name: 'TARGET_DEVICE', defaultValue: 'mistress.aencoin.com', description: 'Where should the built wallet be pushed to?')
 	string(name: 'BASE_URL', defaultValue: 'http://faucet.aencoin.io', description: 'The base URL the project is expecting')
-
 	string(name: 'COOKIE_SECRET', defaultValue: 'ff1014b6a302a2eb5a43773d8df30122b6f92c8e', description: 'Salt to encrypt cookies with (currently unused)')
 	string(name: 'PORT', defaultValue: '3000', description: 'The port to expose web service on')
   string(name: 'NETWORK', defaultValue: 'public-test', description: 'Network Identifier according to the underlying SDK')
@@ -89,7 +87,7 @@ stages {
 
     }
     // With the project in place, restart the node process with updated code
-    sh "ssh ${params.TARGET_DEVICE} cd ${params.TARGET_PATH} && pm2 start pm2.json"
+    sh "ssh ${params.TARGET_DEVICE} cd ${params.TARGET_PATH} && ./node_modules/pm2/bin/pm2 start pm2.json"
    }
   }
  }

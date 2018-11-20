@@ -1,6 +1,6 @@
 # AEN Faucet
 
-The purpose of this project is to provide a service with which users of the AENChain network can retrieve trace amounts of coin, typically used for performing experimentats on the network soon after joining. 
+The purpose of this project is to provide a service with which users of the AENChain network can retrieve trace amounts of coin, typically used for performing experimentats on the network soon after joining.
 
 ## Summary
 
@@ -13,7 +13,7 @@ This is a NodeJS 8+ which is configured through either user environment variable
 * `NETWORK` - Network Identifier according to the underlying chain SDK used
 * `API_HOST` - World reachable IP address / domain name used as a path to REST Gateway (not aen.server)
 * `API_PORT` - The port exposed by the REST gateway for communication
-* `PRIVATE_KEY` - *TODO* Currently experimenting with best key to use. Using supply account
+* `PRIVATE_KEY` - Private Key of the wallet to use for distribution
 * `MIN_XEM` - The minimum amount that may be paid out in any single transaction
 * `MAX_XEM` - The maximum amount that may be paid out in any single transaction
 * `OPT_XEM` - Default value used if user requesting a fixed amount of XEM
