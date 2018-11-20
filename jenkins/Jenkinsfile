@@ -6,7 +6,7 @@ pipeline {
 	string(name: 'BASE_URL', defaultValue: 'http://faucet.aencoin.io', description: 'The base URL the project is expecting')
 	string(name: 'COOKIE_SECRET', defaultValue: 'ff1014b6a302a2eb5a43773d8df30122b6f92c8e', description: 'Salt to encrypt cookies with (currently unused)')
 	string(name: 'PORT', defaultValue: '8000', description: 'The port to expose web service on')
-  string(name: 'NETWORK', defaultValue: 'public-test', description: 'Network Identifier according to the underlying SDK')
+  string(name: 'NETWORK', defaultValue: 'PUBLIC_TEST_NET', description: 'Network Identifier according to the underlying SDK')
   string(name: 'API_HOST', defaultValue: 'http://api-1.aencoin.io', description: 'REST Gateway address Faucet will communicate with')
 	string(name: 'PRIVATE_KEY', defaultValue: '27E8CD690E079F5C73E5A3B42C13583DB7FD55E49ECC240C2DD6167C1864E44C', description: 'Private key of a supply account to be used as faucet')
 	string(name: 'MIN_XEM', defaultValue: '1000000000', description: 'The minimum amount that may be paid out in any single transaction')
@@ -88,7 +88,7 @@ stages {
 
     }
     // With the project in place, restart the node process with updated code
-    sh "ssh ${params.TARGET_DEVICE} ${params.TARGET_PATH}/node_modules/pm2/bin/pm2 startOrReload ${params.TARGET_PATH}/pm2.json"
+    sh "ssh ${params.TARGET_DEVICE} cd ${params.TARGET_PATH} && ${params.TARGET_PATH}/node_modules/pm2/bin/pm2 startOrReload ${params.TARGET_PATH}/pm2.json"
    }
   }
  }
