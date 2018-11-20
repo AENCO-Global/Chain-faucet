@@ -88,7 +88,7 @@ stages {
 
     }
     // With the project in place, restart the node process with updated code
-    sh "ssh ${params.TARGET_DEVICE} cd ${params.TARGET_PATH} && ${params.TARGET_PATH}/node_modules/pm2/bin/pm2 startOrReload ${params.TARGET_PATH}/pm2.json"
+    sh "ssh ${params.TARGET_DEVICE} 'cd ${params.TARGET_PATH} && ${params.TARGET_PATH}/node_modules/pm2/bin/pm2 startOrReload ${params.TARGET_PATH}/pm2.json'"
    }
   }
  }
