@@ -5,7 +5,7 @@ pipeline {
   string(name: 'TARGET_PATH', defaultValue: '/var/www/faucet', description: 'Where (on the device file system) should the build be pushed to?')
 	string(name: 'BASE_URL', defaultValue: 'http://faucet.aencoin.io', description: 'The base URL the project is expecting')
 	string(name: 'COOKIE_SECRET', defaultValue: 'ff1014b6a302a2eb5a43773d8df30122b6f92c8e', description: 'Salt to encrypt cookies with (currently unused)')
-	string(name: 'PORT', defaultValue: '3000', description: 'The port to expose web service on')
+	string(name: 'PORT', defaultValue: '8000', description: 'The port to expose web service on')
   string(name: 'NETWORK', defaultValue: 'public-test', description: 'Network Identifier according to the underlying SDK')
   string(name: 'API_HOST', defaultValue: 'http://api-1.aencoin.io', description: 'REST Gateway address Faucet will communicate with')
 	string(name: 'PRIVATE_KEY', defaultValue: 'D2B22BA41E8D9881F45E650106F5DBB50F6711CA421743EEF005F5E22AA02D09', description: 'Private key of a supply account to be used as faucet')
