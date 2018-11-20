@@ -1,9 +1,9 @@
 .idea
-public/stylesheets/*.css
-/node_modules
-npm-debug.log
+/serverpublic/stylesheets/*.css
+/server/node_modules
+/servernpm-debug.log
 .DS_Store
-/*.env
+/server/*.env
 /.idea
 /.vscode
-/.env.development
+/server/.env.development
