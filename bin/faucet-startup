@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# A simple script to perform first initialisation
+cd ~/.aen/faucet
+
+# If the program is already running, kill it
+# It's possible that this shell task was interrupted without closing REST properly
+if pgrep -f "node ./bin/www" > /dev/null
+then
+    pkill -f "node ./bin/www"
+fi
+
+# Check whether the npm rebuild command has been run yet because, there is a
+# high chance zeromq will need to be recompiled
+if [ ! -e ~/.aen/var/faucet_built ]; then
+  npm i
+  npm rebuild
+  echo "OK" > ~/.aen/var/faucet_built
+fi
+
+sleep 5
+npm start
