@@ -3,12 +3,15 @@ LABEL "maintainer"="Simon Ball <simon.ball@aencoin.com>"
 
 COPY server /root/.aen/faucet
 COPY bin /root/.aen/bin
-COPY supervisor /root/.aen/supervisor
+COPY supervisor/conf.d /root/.aen/supervisor
 
-WORKDIR /root/.aen
+# Install some basic packages
 RUN mkdir -p /root/.aen/var \
   && apk --update add bash g++ make procps supervisor
 
-EXPOSE 8888
+# Overwrite the default supervisor configuration
+COPY supervisor/supervisord.conf /etc/supervisord.conf
 
-CMD ["/usr/bin/supervisord", "-c", "/root/.aen/supervisor/supervisord.conf"]
+EXPOSE 8888
+WORKDIR /root/.aen
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
