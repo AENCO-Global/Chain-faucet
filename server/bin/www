@@ -8,6 +8,9 @@ var app = require('../app');
 var debug = require('debug')('foo:server');
 var http = require('http');
 
+// Because this project expects to be run as a sub-process in parts:
+// polyfill process property
+process.send = process.send || function () {};
 /**
  * Get port from environment and store in Express.
  */
