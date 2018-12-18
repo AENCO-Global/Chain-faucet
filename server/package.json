@@ -1,7 +1,7 @@
 {
   "name": "aen-faucet",
   "description": "AEN faucet web application",
-  "version": "0.0.1",
+  "version": "v1.0.0###BUILD###",
   "author": "AENCto",
   "license": "MIT",
   "private": true,
