@@ -1,95 +1,21 @@
 pipeline {
  agent any
  parameters {
-  string(name: 'TARGET_DEVICE', defaultValue: 'api-1.aencoin.io', description: 'Where should the built wallet be pushed to?')
-  string(name: 'TARGET_PATH', defaultValue: '/var/www/faucet', description: 'Where (on the device file system) should the build be pushed to?')
-	string(name: 'BASE_URL', defaultValue: 'http://faucet.aencoin.io', description: 'The base URL the project is expecting')
-	string(name: 'COOKIE_SECRET', defaultValue: 'ff1014b6a302a2eb5a43773d8df30122b6f92c8e', description: 'Salt to encrypt cookies with (currently unused)')
-	string(name: 'PORT', defaultValue: '80', description: 'The port to expose web service on')
-  string(name: 'NETWORK', defaultValue: 'publicTest', description: 'Network Identifier according to the underlying SDK')
-  string(name: 'API_HOST', defaultValue: 'http://api-1.aencoin.io', description: 'REST Gateway address Faucet will communicate with')
-	string(name: 'PRIVATE_KEY', defaultValue: '27E8CD690E079F5C73E5A3B42C13583DB7FD55E49ECC240C2DD6167C1864E44C', description: 'Private key of a supply account to be used as faucet')
-	string(name: 'MIN_XEM', defaultValue: '1000000000', description: 'The minimum amount that may be paid out in any single transaction')
-	string(name: 'MAX_XEM', defaultValue: '2000000000', description: 'The minimum amount that may be paid out in any single transaction')
-	string(name: 'OPT_XEM', defaultValue: '', description: 'Default value used if user requesting a fixed amount of XEM')
-	string(name: 'ENOUGH_BALANCE', defaultValue: '20000000000', description: 'If wallet requesting XEM has a balance greater than this value, don\'t allow any more to be claimed')
-	string(name: 'MAX_UNCONFIRMED', defaultValue: '5', description: 'If the Faucet is waiting for this value of transactions to be complete, temporarily halt service')
-	string(name: 'WAIT_HEIGHT', defaultValue: '0', description: 'If Faucet is this value blocks behind the network, temporarily halt service')
-  string(name: 'RECAPTCHA_CLIENT_SECRET', defaultValue: '', description: 'Google ReCaptcha Client side key')
-  string(name: 'RECAPTCHA_SERVER_SECRET', defaultValue: '', description: 'Google ReCaptcha Server Side key')
+  choice(name: 'environment', choices: ['staging', 'production'], description: 'What environment?')
  }
-
-stages {
-
-  stage('Checkout Repositories') {
-   steps {
-    dir('faucet') {
-     git credentialsId: '6e8fe423-1a29-43f4-a5b1-13b307c4c679', url: 'git@github.com:AENCO-Global/Chain-faucet.git'
-    }
-   }
-  }
-
-  stage('Project Install') {
-   steps {
-    dir('faucet/server') {
-     sh 'ls -la && npm i'
-    }
-   }
-  }
-
-  stage('Run tests') {
-   steps {
-    dir('faucet/server') {
-     sh 'echo "Run tests here if any..."'
-     // sh 'npm run test'
-    }
-   }
-  }
-
-  stage('Build Distribution') {
-   steps {
-    dir('faucet/server') {
-
-     script {
-      // Define environment content to go in file
-      def envContent = "COOKIE_SECRET=${params.COOKIE_SECRET}\r\n"
-			envContent = envContent + "PORT=${params.PORT}\r\n"
-      envContent = envContent + "NETWORK=${params.NETWORK}\r\n"
-			envContent = envContent + "API_HOST=${params.API_HOST}\r\n"
-      envContent = envContent + "API_PORT=3000\r\n"
-      envContent = envContent + "PRIVATE_KEY=${params.PRIVATE_KEY}\r\n"
-			envContent = envContent + "MIN_XEM=${params.MIN_XEM}\r\n"
-			envContent = envContent + "MAX_XEM=${params.MAX_XEM}\r\n"
-			envContent = envContent + "OPT_XEM=${params.OPT_HOST}\r\n"
-			envContent = envContent + "ENOUGH_BALANCE=${params.ENOUGH_BALANCE}\r\n"
-			envContent = envContent + "MAX_UNCONFIRMED=${params.MAX_UNCONFIRMED}\r\n"
-			envContent = envContent + "WAIT_HEIGHT=${params.WAIT_HEIGHT}\r\n"
-			envContent = envContent + "RECAPTCHA_CLIENT_SECRET=${params.RECAPTCHA_CLIENT_SECRET}\r\n"
-      envContent = envContent + "RECAPTCHA_SERVER_SECRET=${params.RECAPTCHA_SERVER_SECRET}\r\n"
-      envContent = envContent + "BUILD_NUMBER=${env.BUILD_NUMBER}"
-      writeFile file: '.env', text: envContent
-      sh "cat .env"
+ stage('Checkout repositories') {
+     steps {
+         dir('ansible') {
+             git credentialsId: 'JenkinsAENEAS', url: 'git@github.com:AENCO-Global/Config-Management-Ansible-Chain.git'
+         }
+         dir('inventory') {
+             git credentialsId: 'JenkinsAENEAS', url: 'git@github.com:AENCO-Global/Config-Management-Inventory-Chain.git'
+         }
      }
-    }
-   }
-  }
-
-  stage('Deploy to Server') {
-   steps {
-    dir('faucet') {
-     sh 'ls -la server'
-     // TODO If using Jenkins (rather than local keyring), change following lines
-     //  withCredentials([sshUserPrivateKey(credentialsId: 'virtualbox', keyFileVariable: 'keyFile', passphraseVariable: 'passphrase', usernameVariable: 'username')]) {
-     //   sh "echo scp -r -i ${keyFile} dist ${username}@${params.TARGET_DEVICE}:${params.TARGET_PATH}"
-     //   sh "scp -r -i ${keyFile} dist ${username}@${params.TARGET_DEVICE}:${params.TARGET_PATH}"
-     //  }
-     sh "scp -r server/* ${params.TARGET_DEVICE}:${params.TARGET_PATH}"
-		 sh "scp -r server/.env ${params.TARGET_DEVICE}:${params.TARGET_PATH}/.env"
-
-    }
-    // With the project in place, restart the node process with updated code
-    sh "ssh ${params.TARGET_DEVICE} 'cd ${params.TARGET_PATH} && ${params.TARGET_PATH}/node_modules/pm2/bin/pm2 startOrReload ${params.TARGET_PATH}/pm2.json'"
-   }
-  }
  }
-}
+ stage('Run the Ansible playbook') {
+     steps {
+         ansiblePlaybook credentialsId: 'ansible_jenkins', disableHostKeyChecking: true, inventory: "inventory/${params.environment}/hosts", playbook: 'ansible/roles/faucet/tasks/main.yml'
+         sh "cat ~/.aen/var/faucet_properties.json"
+     }
+ }
