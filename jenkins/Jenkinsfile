@@ -1,21 +1,23 @@
 pipeline {
- agent any
- parameters {
-  choice(name: 'environment', choices: ['staging', 'production'], description: 'What environment?')
- }
- stage('Checkout repositories') {
-     steps {
-         dir('ansible') {
-             git credentialsId: 'JenkinsAENEAS', url: 'git@github.com:AENCO-Global/Config-Management-Ansible-Chain.git'
-         }
-         dir('inventory') {
-             git credentialsId: 'JenkinsAENEAS', url: 'git@github.com:AENCO-Global/Config-Management-Inventory-Chain.git'
-         }
-     }
- }
- stage('Run the Ansible playbook') {
-     steps {
-         ansiblePlaybook credentialsId: 'ansible_jenkins', disableHostKeyChecking: true, inventory: "inventory/${params.environment}/hosts", playbook: 'ansible/roles/faucet/tasks/main.yml'
-         sh "cat ~/.aen/var/faucet_properties.json"
-     }
- }
+    agent any
+    parameters {
+        choice(name: 'environment', choices: ['staging', 'development', 'production'], description: 'What environment?')
+    }
+    stages {
+        stage('Checkout repositories') {
+            steps {
+                dir('ansible') {
+                    git credentialsId: 'JenkinsAENEAS', url: 'git@github.com:AENCO-Global/Config-Management-Ansible-Chain.git'
+                }
+                dir('inventory') {
+                    git credentialsId: 'JenkinsAENEAS', url: 'git@github.com:AENCO-Global/Config-Management-Inventory-Chain.git'
+                }
+            }
+        }
+        stage('Run the Ansible playbook') {
+            steps {
+                ansiblePlaybook credentialsId: 'ansible_jenkins', disableHostKeyChecking: true, inventory: "inventory/${params.environment}/hosts", playbook: 'ansible/roles/faucet/tasks/main.yml'
+            }
+        }
+    }
+}
