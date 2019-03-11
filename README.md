@@ -23,7 +23,7 @@ This is a NodeJS 8+ which is configured through either user environment variable
 * `RECAPTCHA_CLIENT_SECRET` - If wanting to integrate Google recaptcha challenge, client side secret to send to Google
 * `RECAPTCHA_SERVER_SECRET` - If wanting to integrate Google recaptcha challenge, business side secret to send to Google
 
-## Usage
+## Bare Metal Usage
 
 ```
 # install packages
@@ -34,6 +34,41 @@ $ npm start
 
 # or for development
 $ npm run dev
+```
+
+## Docker Usage
+
+There is a Docker image available for public use which will either support the
+aforementioned configuration variables being present in the environment or
+mapping a [dotenv](https://github.com/motdotla/dotenv) in to the container at
+instantiation.
+
+```
+# Pull the latest Docker image
+docker pull aenco/faucet
+
+# Create a dotenv file for use
+cat > $(pwd)/dotenv <<EOL
+COOKIE_SECRET=placeholder
+PORT=9999
+NETWORK=PUBLIC_TEST
+API_HOST=http://api-2.aencoin.io
+API_PORT=3000
+PRIVATE_KEY=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+MIN_XEM=1000000000
+MAX_XEM=2000000000
+OPT_XEM=
+ENOUGH_BALANCE=20000000000
+MAX_UNCONFIRMED=5
+WAIT_HEIGHT=0
+RECAPTCHA_CLIENT_SECRET=
+RECAPTCHA_SERVER_SECRET=
+EOL
+
+# Fire up the container
+docker run -it -d -p 9999:9999 -v $(pwd)/dotenv:/root/.aen/faucet/.env aenco/faucet
+
+# Open up your browser to port 9999
 ```
 
 ## Heroku Deployment
